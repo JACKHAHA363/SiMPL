@@ -1,5 +1,9 @@
 from contextlib import contextmanager
 from metaworld.envs import ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE
+from metaworld.envs.mujoco.sawyer_xyz.sawyer_xyz_env import SawyerXYZEnv
+import gym
+from gym.spaces import Box
+import numpy as np
 
 
 class ML43Task:
@@ -11,6 +15,15 @@ class ML43Task:
 
 class ML43Env:
     """ A wrapper of ML43 """
+
+    @property
+    def action_space(self):
+        return self._env.action_space
+
+    @property
+    def observation_space(self):
+        return self._env.observation_space
+
     def __init__(self):
         self.task = None
         self._env = None

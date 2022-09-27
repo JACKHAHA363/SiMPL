@@ -125,6 +125,7 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--wandb-project-name')
     parser.add_argument('-r', '--wandb-run-name')
     parser.add_argument('-a', '--save_file_path')
+    parser.add_argument('--debug', action='store_true')
     args = parser.parse_args()
 
     module = importlib.import_module(import_pathes[args.domain])
@@ -183,10 +184,11 @@ if __name__ == '__main__':
     # meta train
     trainer = Simpl(high_policy, spirl_prior_policy, qfs, encoder, enc_buffers, buffers, **config['simpl']).to(gpu)
 
-    wandb.init(
-        project=wandb_project_name, name=wandb_run_name,
-        config={**config, 'gpu': gpu, 'spirl_pretrained_path': args.spirl_pretrained_path}
-    )
+    if not args.debug:
+        wandb.init(
+            project=wandb_project_name, name=wandb_run_name,
+            config={**config, 'gpu': gpu, 'spirl_pretrained_path': args.spirl_pretrained_path}
+        )
     for epoch_i in range(1, config['n_epoch']+1):
         log = simpl_meta_train_iter(conc_collector, trainer, train_tasks, **config['train'])
         log['epoch_i'] = epoch_i
@@ -206,7 +208,8 @@ if __name__ == '__main__':
         #        with env.set_task(task):
         #            visualize_env(axes[task_idx//10][task_idx%10], env, list(buffer.episodes)[-20:])
         #    log['policy_vis'] = fig
-        wandb.log(log)
+        if not args.debug:
+            wandb.log(log)
 
     torch.save({
         'encoder': encoder,
