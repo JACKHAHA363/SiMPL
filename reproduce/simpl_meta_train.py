@@ -189,14 +189,22 @@ if __name__ == '__main__':
     for epoch_i in range(1, config['n_epoch']+1):
         log = simpl_meta_train_iter(conc_collector, trainer, train_tasks, **config['train'])
         log['epoch_i'] = epoch_i
-        if epoch_i % policy_vis_period == 0:
-            plt.close('all')
-            n_row = int(np.ceil(len(train_tasks)/10))
-            fig, axes = plt.subplots(n_row, 10, figsize=(20, 2*n_row))
-            for task_idx, (task, buffer) in enumerate(zip(train_tasks, buffers)):
-                with env.set_task(task):
-                    visualize_env(axes[task_idx//10][task_idx%10], env, list(buffer.episodes)[-20:])
-            log['policy_vis'] = fig
+        if epoch_i % 20 == 0:
+            torch.save({
+                'encoder': encoder,
+                'high_policy': high_policy,
+                'qfs': qfs,
+                'policy_post_reg': trainer.policy_post_reg().item()
+            }, save_filepath + ".epoch{}".format(epoch_i))
+        # Disable policy visualization for now
+        #if epoch_i % policy_vis_period == 0:
+        #    plt.close('all')
+        #    n_row = int(np.ceil(len(train_tasks)/10))
+        #    fig, axes = plt.subplots(n_row, 10, figsize=(20, 2*n_row))
+        #    for task_idx, (task, buffer) in enumerate(zip(train_tasks, buffers)):
+        #        with env.set_task(task):
+        #            visualize_env(axes[task_idx//10][task_idx%10], env, list(buffer.episodes)[-20:])
+        #    log['policy_vis'] = fig
         wandb.log(log)
 
     torch.save({
