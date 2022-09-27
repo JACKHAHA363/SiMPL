@@ -111,6 +111,7 @@ if __name__ == '__main__':
         'maze_40t': 'maze.simpl_meta_train_40t',
         'maze_20t': 'maze.simpl_meta_train_20t',
         'kitchen': 'kitchen.simpl_meta_train',
+        'ml43': 'ml43.simpl_meta_train',
     }
 
     # CLI
