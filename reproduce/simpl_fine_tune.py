@@ -112,10 +112,10 @@ if __name__ == '__main__':
             for episode_i in range(config['n_prior_episode']+1, config['n_episode']+1):
                 log = simpl_fine_tune_iter(collector, trainer, **config['train'])
                 log['episode_i'] = episode_i
-                if episode_i % policy_vis_period == 0:
-                    plt.close('all')
-                    plt.figure()
-                    log['policy_vis'] = visualize_env(plt.gca(), env, list(buffer.episodes)[-20:])
+                #if episode_i % policy_vis_period == 0:
+                #    plt.close('all')
+                #    plt.figure()
+                #    log['policy_vis'] = visualize_env(plt.gca(), env, list(buffer.episodes)[-20:])
                 wandb.log(log)
 
         wandb.finish()
