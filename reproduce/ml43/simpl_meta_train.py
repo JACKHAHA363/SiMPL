@@ -1,6 +1,7 @@
 from simpl.env.ml43 import ML43Tasks, ML43Env
+import gym
 
-env = ML43Env()
+env = gym.make('simpl-ml43-v0')
 train_tasks = ML43Tasks.train_tasks
 config = dict(
     policy=dict(hidden_dim=128, n_hidden=5),

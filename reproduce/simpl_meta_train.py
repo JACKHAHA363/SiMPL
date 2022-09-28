@@ -176,6 +176,7 @@ if __name__ == '__main__':
         Buffer(state_dim, high_action_dim, config['buffer_size'])
         for _ in range(len(train_tasks))
     ]
+    print('##### Warming Up ######')
     simpl_warm_up_buffer(
         conc_collector, high_policy, train_tasks, enc_buffers, buffers,
         config['train']['post_enc_size'], config['train']['batch_size']
