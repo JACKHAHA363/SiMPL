@@ -20,6 +20,9 @@ def simpl_fine_tune_iter(collector, trainer, *, batch_size, reuse_rate):
     high_episode = episode.as_high_episode()
     trainer.buffer.enqueue(high_episode)
     log['tr_return'] = sum(episode.rewards)
+    success = sum([info['success'] for info in episode.infos])
+    log['success_score'] = success
+    log['success_rate'] = success > 5
 
     if trainer.buffer.size < batch_size:
         return log
@@ -50,6 +53,7 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--policy-vis_period', type=int)
     parser.add_argument('-p', '--wandb-project-name')
     parser.add_argument('-r', '--wandb-run-name')
+    parser.add_argument('--debug', action='store_true')
     args = parser.parse_args()
 
     module = importlib.import_module(import_pathes[args.domain])
@@ -85,14 +89,15 @@ if __name__ == '__main__':
 
     # train on all tasks
     for task_idx, task in enumerate(tasks):
-        wandb.init(
-            project=wandb_project_name, name=wandb_run_name,
-            config={
-                **config, 'task_idx': task_idx,
-                'spirl_pretrained_path': args.spirl_pretrained_path,
-                'simpl_metatrained_path': args.simpl_metatrained_path
-            }
-        )
+        if not args.debug:
+            wandb.init(
+                project=wandb_project_name, name=wandb_run_name,
+                config={
+                    **config, 'task_idx': task_idx,
+                    'spirl_pretrained_path': args.spirl_pretrained_path,
+                    'simpl_metatrained_path': args.simpl_metatrained_path
+                }
+            )
         
         with env.set_task(task):
             # collect from prior policy & encode
@@ -117,7 +122,11 @@ if __name__ == '__main__':
                 #    plt.close('all')
                 #    plt.figure()
                 #    log['policy_vis'] = visualize_env(plt.gca(), env, list(buffer.episodes)[-20:])
-                wandb.log(log)
+                if not args.debug:
+                    wandb.log(log)
+                else:
+                    print(task, episode_i, log['success_score'])
 
-        wandb.finish()
+        if not args.debug:
+            wandb.finish()
 
