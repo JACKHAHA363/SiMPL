@@ -26,7 +26,7 @@ def simpl_warm_up_buffer(
                 conc_collector.submit(train_tasks[task_idx], policy)
 
         episodes = conc_collector.wait()
-
+        print(f"warmup.py:line29: {train_tasks[task_idx]}: Collected {len(episodes)} episodes")
         for episode, task_idx in zip(episodes, task_indices):
             enc_buffers[task_idx].enqueue(episode.as_high_episode())
 
@@ -43,6 +43,7 @@ def simpl_warm_up_buffer(
                 conc_collector.submit(train_tasks[task_idx], policy)
 
         episodes = conc_collector.wait()
+        print(f"warmup.py:line46: {train_tasks[task_idx]}: Collected {len(episodes)} episodes")
 
         for episode, task_idx in zip(episodes, task_indices):
             buffers[task_idx].enqueue(episode.as_high_episode())
@@ -193,7 +194,7 @@ if __name__ == '__main__':
     for epoch_i in range(1, config['n_epoch']+1):
         log = simpl_meta_train_iter(conc_collector, trainer, train_tasks, **config['train'])
         log['epoch_i'] = epoch_i
-        if epoch_i % 20 == 0:
+        if epoch_i % 1 == 0:
             torch.save({
                 'encoder': encoder,
                 'high_policy': high_policy,
