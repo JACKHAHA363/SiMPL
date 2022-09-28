@@ -194,7 +194,7 @@ if __name__ == '__main__':
     for epoch_i in range(1, config['n_epoch']+1):
         log = simpl_meta_train_iter(conc_collector, trainer, train_tasks, **config['train'])
         log['epoch_i'] = epoch_i
-        if epoch_i % 1 == 0:
+        if epoch_i % 20 == 0:
             torch.save({
                 'encoder': encoder,
                 'high_policy': high_policy,

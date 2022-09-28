@@ -200,7 +200,8 @@ if __name__ == '__main__':
             config={**config, 'gpu': gpu, 'spirl_pretrained_path': args.spirl_pretrained_path}
         )
     for epoch_i in range(1, config['n_epoch']+1):
-        train_task_ids = random.shuffle([i for i in range(len(train_tasks))])
+        train_task_ids = [i for i in range(len(train_tasks))]
+        random.shuffle(train_task_ids)
         log = simpl_meta_train_iter(conc_collector, trainer, train_task_ids[:args.max_train_tasks], train_tasks, **config['train'])
         log['epoch_i'] = epoch_i
         if epoch_i % 1 == 0:
