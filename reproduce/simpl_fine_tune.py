@@ -37,6 +37,7 @@ if __name__ == '__main__':
     import_pathes = {
         'maze': 'maze.simpl_fine_tune',
         'kitchen': 'kitchen.simpl_fine_tune',
+        'ml43': 'ml43.simpl_fine_tune',
     }
     
     # CLI
