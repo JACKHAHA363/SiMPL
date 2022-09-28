@@ -12,10 +12,16 @@ from simpl.alg.spirl.spirl_policy import SpirlPriorPolicy
 parser = argparse.ArgumentParser()
 parser.add_argument('--spirl_weight', required=True)
 parser.add_argument('--output', required=True)
+parser.add_argument('--state_dim', default=None, type=int)
+parser.add_argument('--action_dim', default=None, type=int)
 args = parser.parse_args()
 
 # Get spirl low policy
 ll_model_params.cond_decode = True
+if args.state_dim is not None:
+    ll_model_params.state_dim = args.state_dim
+if args.action_dim is not None:
+    ll_model_params.action_dim=args.action_dim
 
 # create LL closed-loop policy
 ll_policy_params = AttrDict(
