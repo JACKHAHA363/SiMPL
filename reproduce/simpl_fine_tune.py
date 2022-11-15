@@ -22,7 +22,7 @@ def simpl_fine_tune_iter(collector, trainer, *, batch_size, reuse_rate):
     log['tr_return'] = sum(episode.rewards)
     success = sum([info['success'] for info in episode.infos])
     log['success_score'] = success
-    log['success_rate'] = success > 5
+    log['success_rate'] = float(success > 5)
 
     if trainer.buffer.size < batch_size:
         return log
@@ -92,6 +92,7 @@ if __name__ == '__main__':
         if not args.debug:
             wandb.init(
                 project=wandb_project_name, name=wandb_run_name,
+                entity='iclr2022',
                 config={
                     **config, 'task_idx': task_idx,
                     'spirl_pretrained_path': args.spirl_pretrained_path,
@@ -125,7 +126,7 @@ if __name__ == '__main__':
                 if not args.debug:
                     wandb.log(log)
                 else:
-                    print(task, episode_i, log['success_score'])
+                    print(task, episode_i, log['success_rate'], log['success_score'])
 
         if not args.debug:
             wandb.finish()

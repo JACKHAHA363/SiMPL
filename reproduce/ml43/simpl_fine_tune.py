@@ -6,7 +6,8 @@ env = gym.make('simpl-ml43-v0')
 tasks = ML43Tasks.test_tasks
 config = dict(
     constrained_sac=dict(auto_alpha=True, kl_clip=20,
-                         target_kl=5, increasing_alpha=True),
+                         target_kl=5, increasing_alpha=True,
+                         policy_lr=5e-5, qf_lr=5e-5, alpha_lr=5e-5),
     buffer_size=20000,
     n_prior_episode=20,
     time_limit=280,
